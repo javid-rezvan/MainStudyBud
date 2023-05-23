@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from . models import User,Topic,Room,Message
 from django.db.models import Q
+from . forms import RoomForm
 
 def home(request):
     q=request.GET.get('q') if request.GET.get('q')!=None else ''
@@ -18,4 +19,23 @@ def room(request,pk):
     participants=room.participants.all()
     context={'room':room,'room_messages': room_messages,'participants':participants}
     return render(request,'base/room.html',context)
+
+def createRoom(request):
+    topics=Topic.objects.all()
+    form=RoomForm()
+    if request.method == 'POST':
+        form=RoomForm(request.POST)
+        topic_name=request.POST.get('topic')
+        topic,created=Topic.objects.get_or_create(name=topic_name)
+        Room.objects.create(
+            host=request.user,
+            topic=topic,
+            name=request.POST.get('name'),
+            description=request.POST.get('description')
+        )
+        return redirect('home')
+    context={'topics':topics,'form':form}
+    return render(request,'base/create-room.html',context)
+
+
 

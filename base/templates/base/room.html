@@ -1,5 +1,5 @@
-    {% extends 'main.html' %}
-    {% block content %}
+{% extends 'main.html' %}
+{% block content %}
     <main class="profile-page layout layout--2">
       <div class="container">
         <!-- Room Start -->
@@ -92,13 +92,13 @@
             </div>
             <div class="room__conversation">
               <div class="threads scroll">
-                {% for message in  room_messages %}
+                {% for message in room_messages %}
                 <div class="thread">
                   <div class="thread__top">
                     <div class="thread__author">
                       <a href="#" class="thread__authorInfo">
                         <div class="avatar avatar--small">
-                          <img src="{{room.host.avatar.url}}" />
+                          <img src="{{message.user.avatar.url}}" />
                         </div>
                         <span>@{{message.user.username}}</span>
                       </a>
@@ -114,11 +114,12 @@
                     </div>
                   </div>
                   <div class="thread__details">
-                   {{message}}
+                    {{message.body}}
                   </div>
                 </div>
                 {% endfor %}
               </div>
+              
             </div>
           </div>
           <div class="room__message">
@@ -289,4 +290,4 @@
         <!--  End -->
       </div>
     </main>
-    {% endblock content %}
+ {% endblock content %}

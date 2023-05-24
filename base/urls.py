@@ -9,7 +9,8 @@ urlpatterns =[
     path('user-profile/<str:pk>/',views.uesrProfile,name='profile'),
     path('login-page/',views.loginPage,name='login'),
     path('logout/',views.logoutPage,name='logout'),
-    path('update-user/',views.updateUser,name='update-user')
+    path('update-user/',views.updateUser,name='update-user'),
+    path('signup/',views.registerUser,name='signup'),
 ]
 
 

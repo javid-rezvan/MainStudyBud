@@ -1,7 +1,9 @@
 from django.shortcuts import render,redirect
 from . models import User,Topic,Room,Message
 from django.db.models import Q
-from . forms import RoomForm
+from . forms import RoomForm,UserForm
+from django.contrib.auth import login,logout,authenticate
+from django.contrib import messages
 
 def home(request):
     q=request.GET.get('q') if request.GET.get('q')!=None else ''
@@ -63,3 +65,41 @@ def uesrProfile(request,pk):
     return render(request,'base/profile.html',context)
 
 
+def loginPage(request):
+    user=request.user
+    if request.user.is_authenticated:
+        return redirect('home')
+    if request.method == 'POST':
+        email=request.POST.get('username')
+        password=request.POST.get('password')
+        try:
+            user=User.objects.get(email=email)
+            user=authenticate(request,email=email,password=password)
+            if user is not None:
+                login(request,user)
+                return redirect('home')
+            else:
+                messages.error(request,'password is not correct') 
+        except:
+            messages.error(request,'user dose not exists')
+    context={}
+    return render(request,'base/login.html',context)
+
+def logoutPage(request):
+      logout(request)
+      return redirect('home')
+  
+  
+def updateUser(request):
+    user=request.user
+    form=UserForm(instance=user)
+    if request.method == 'POST':
+        form=UserForm(request.POST,request.FILES,instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('profile',pk=user.id)
+    context={'form':form}
+    return render(request,'base/edit-user.html',context)
+    
+    
+    

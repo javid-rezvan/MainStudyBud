@@ -54,3 +54,12 @@ def updateRoom(request,pk):
     context={'room':room,'topics':topics,'form':form}
     return render(request,'base/create-room.html',context)
 
+def uesrProfile(request,pk):
+    user=User.objects.get(id=pk)
+    topics=Topic.objects.all()
+    rooms=user.room_set.all()
+    room_messages=user.message_set.all()
+    context={'topics':topics,'rooms':rooms,'room_messages':room_messages,'user':user}
+    return render(request,'base/profile.html',context)
+
+

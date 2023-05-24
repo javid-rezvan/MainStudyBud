@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from . models import User,Topic,Room,Message
 from django.db.models import Q
-from . forms import RoomForm,UserForm
+from . forms import RoomForm,UserForm,myUserCreationForm
 from django.contrib.auth import login,logout,authenticate
 from django.contrib import messages
 
@@ -70,11 +70,11 @@ def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
     if request.method == 'POST':
-        email=request.POST.get('username')
+        username=request.POST.get('username')
         password=request.POST.get('password')
         try:
-            user=User.objects.get(email=email)
-            user=authenticate(request,email=email,password=password)
+            user=User.objects.get(username=username)
+            user=authenticate(request,username=username,password=password)
             if user is not None:
                 login(request,user)
                 return redirect('home')
@@ -101,5 +101,19 @@ def updateUser(request):
     context={'form':form}
     return render(request,'base/edit-user.html',context)
     
+def registerUser(request):
+    form=myUserCreationForm()
+    if request.method =='POST':
+        form=myUserCreationForm(request.POST)
+        if form.is_valid():
+            user=form.save(commit=False)
+            user.save()
+            login(request,user)
+            return redirect('home')
+        else:
+            messages.error(request,'An error Accoured during registration')
+            
+    context={'form':form}
+    return render(request,'base/signup.html',context)
     
     

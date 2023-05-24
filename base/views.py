@@ -70,11 +70,11 @@ def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
     if request.method == 'POST':
-        username=request.POST.get('username')
+        email=request.POST.get('username')
         password=request.POST.get('password')
         try:
-            user=User.objects.get(username=username)
-            user=authenticate(request,username=username,password=password)
+            user=User.objects.get(email=email)
+            user=authenticate(request,email=email,password=password)
             if user is not None:
                 login(request,user)
                 return redirect('home')

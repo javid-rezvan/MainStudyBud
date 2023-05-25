@@ -122,5 +122,18 @@ def topics(request):
     context={'topics':topics}
     return render(request,'base/topics.html',context)
     
+
+def activityPage(request):
+    room_messages=Message.objects.all()
+    context={'room_messages':room_messages}
+    return render(request,'base/activity.html',context)
     
+    
+def deleteRoom(request,pk):
+    room=Room.objects.get(id=pk)
+    if request.method == 'POST':
+        room.delete()
+        return redirect('home')
+    context={'obj':room}
+    return render(request,'base/delete.html',context)    
     
